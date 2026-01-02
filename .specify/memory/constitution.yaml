@@ -1,0 +1,84 @@
+project_overview:
+  name: "Todo Console Application"
+  description: "A basic in-memory Todo console application in Python"
+  purpose: "To provide a simple command-line interface for managing tasks with basic CRUD operations"
+
+development_principles:
+  - name: "Spec-Driven Development"
+    description: "All code must be generated based on specifications, plans, and tasks. No manual coding by agents."
+    rule: "Agents must only generate code based on specs, plans, and tasks."
+  
+  - name: "Clean Code"
+    description: "Code must be clean, readable, and maintainable."
+    rule: "Follow Python best practices and PEP 8 style guidelines."
+  
+  - name: "No Manual Coding"
+    description: "AI agents must not engage in manual coding."
+    rule: "All code generation must follow the spec-plan-task implementation workflow."
+
+agent_workflow:
+  interpretation: "Interpret specifications to understand feature requirements"
+  planning: "Generate implementation plans based on specifications"
+  task_breakdown: "Break plans into specific, testable tasks"
+  implementation: "Implement code based on tasks with proper testing"
+  iteration: "Handle spec updates and maintain history"
+
+technology_constraints:
+  python_version: "3.13+"
+  packaging: "UV (for packaging)"
+  storage: "In-memory storage only"
+  dependencies: "No external dependencies beyond Python stdlib"
+  allowed_libraries: ["argparse", "json", "datetime", "os", "sys", "re", "collections", "itertools"]
+
+feature_specifications:
+  required_features:
+    - name: "Add task"
+      description: "Add a new task with title and description"
+      requirements: ["Task must have a unique ID", "Title is required", "Description is optional"]
+    
+    - name: "View tasks"
+      description: "View all tasks with their status"
+      requirements: ["Display all tasks", "Show status (complete/incomplete)", "Show title and description"]
+    
+    - name: "Update task"
+      description: "Update task details by ID"
+      requirements: ["Update title", "Update description", "Maintain task ID"]
+    
+    - name: "Delete task"
+      description: "Delete a task by ID"
+      requirements: ["Remove task by ID", "Validate ID exists before deletion"]
+    
+    - name: "Mark task status"
+      description: "Mark a task as complete or incomplete"
+      requirements: ["Toggle task status", "Validate ID exists", "Update completion status"]
+
+error_handling:
+  input_validation: "Validate all user inputs before processing"
+  error_messages: "Provide clear, helpful error messages to users"
+  exception_handling: "Handle exceptions gracefully without crashing the application"
+  invalid_operations: "Handle invalid operations (e.g., updating non-existent tasks)"
+
+best_practices:
+  modular_code: "Structure code in a modular way with separate functions for each operation"
+  documentation: "Include docstrings for all functions and classes"
+  testing: "Include unit tests for all functionality"
+  separation_of_concerns: "Separate concerns between data management, user interface, and business logic"
+
+iteration_rules:
+  spec_updates: "When specifications change, update plans and tasks accordingly"
+  history_storage: "Maintain history of specification changes and implementation versions"
+  versioning: "Follow semantic versioning for the application"
+  rollback: "Maintain ability to rollback to previous working versions if needed"
+
+deliverables_guidelines:
+  code_quality: "Code must be clean, well-documented, and follow Python best practices"
+  testing: "All features must be thoroughly tested with unit tests"
+  documentation: "Include README with usage instructions"
+  compliance: "Must comply with all technology constraints and feature specifications"
+  review_process: "All code must pass review before acceptance"
+
+governance:
+  constitution_version: "1.0.0"
+  ratification_date: "2025-01-01"
+  last_amended_date: "2025-01-01"
+  amendment_process: "Changes to this constitution require explicit approval and version update"

@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: todo-app
+Version: 0.1.0
+Summary: Advanced Todo application with recurring tasks and time-based reminders
+Author-email: Your Name <your.email@example.com>
+Requires-Python: >=3.13

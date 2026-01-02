@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Todo App with Recurring Tasks and Notifications</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Advanced Todo App</h1>
+        <p>This app supports recurring tasks and time-based reminders with browser notifications.</p>
+        
+        <div id="task-form">
+            <h2>Add New Task</h2>
+            <input type="text" id="task-title" placeholder="Task title" />
+            <input type="text" id="task-description" placeholder="Task description" />
+            <select id="task-recurrence">
+                <option value="">No recurrence</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+            </select>
+            <input type="datetime-local" id="task-due-date" placeholder="Due date (YYYY-MM-DD HH:MM)" />
+            <button id="add-task-btn">Add Task</button>
+        </div>
+        
+        <div id="task-list">
+            <h2>Task List</h2>
+            <div id="tasks-container"></div>
+        </div>
+    </div>
+
+    <!-- Import our PyScript todo app -->
+    <py-config>
+        {
+            "packages": ["datetime"]
+        }
+    </py-config>
+    
+    <py-script src="./pyscript_todo.py"></py-script>
+    
+    <py-script>
+from pyscript import display, HTML
+from js import document
+from datetime import datetime
+
+# Reference to the global app instance
+from pyscript_todo import app
+
+def add_task(event):
+    title = document.getElementById("task-title").value
+    description = document.getElementById("task-description").value
+    recurrence = document.getElementById("task-recurrence").value
+    due_date_input = document.getElementById("task-due-date").value
+    
+    if not title:
+        display("Task title is required!", target="app", append=True)
+        return
+    
+    # Format the due date properly if provided
+    due_date_str = None
+    if due_date_input:
+        # Convert datetime-local format (YYYY-MM-DDTHH:MM) to our expected format (YYYY-MM-DD HH:MM)
+        due_date_str = due_date_input.replace("T", " ")
+    
+    task_id = app.add_task(title, description, recurrence, due_date_str)
+    
+    if task_id != -1:
+        display(f"Task '{title}' added successfully with ID: {task_id}", target="app", append=True)
+        # Clear the form
+        document.getElementById("task-title").value = ""
+        document.getElementById("task-description").value = ""
+        document.getElementById("task-recurrence").value = ""
+        document.getElementById("task-due-date").value = ""
+        # Refresh the task list
+        refresh_task_list()
+    else:
+        display("Error adding task. Please try again.", target="app", append=True)
+
+def refresh_task_list():
+    # Clear the current task list
+    tasks_container = document.getElementById("tasks-container")
+    tasks_container.innerHTML = ""
+    
+    # Get all tasks from the app
+    tasks = app.get_all_tasks()
+    
+    if not tasks:
+        tasks_container.innerHTML = "<p>No tasks available.</p>"
+        return
+    
+    # Create HTML for each task
+    for task in tasks:
+        task_html = f"""
+        <div class="task-item" style="border: 1px solid #ccc; margin: 5px; padding: 10px;">
+            <div><strong>{task.title}</strong></div>
+            <div>{task.description}</div>
+            <div>Status: {'Completed' if task.completed else 'Pending'}</div>
+            <div>Priority: {task.priority.value if task.priority else 'None'}</div>
+            <div>Recurrence: {task.recurrence.value if task.recurrence else 'None'}</div>
+            <div>Due: {task.due_datetime.strftime('%Y-%m-%d %H:%M') if task.due_datetime else 'None'}</div>
+            <div>Tags: {', '.join(task.tags) if task.tags else 'None'}</div>
+            <button onclick="mark_complete({task.id})">Mark Complete</button>
+        </div>
+        """
+        tasks_container.innerHTML += task_html
+
+def mark_complete(task_id):
+    success = app.mark_task_complete(task_id)
+    if success:
+        display(f"Task {task_id} marked as complete!", target="app", append=True)
+        # Refresh the task list to show the change
+        refresh_task_list()
+    else:
+        display(f"Failed to mark task {task_id} as complete.", target="app", append=True)
+
+# Add event listener to the button
+from js import document
+document.getElementById("add-task-btn").addEventListener("click", add_task)
+
+# Initial load of task list
+refresh_task_list()
+    </py-script>
+</body>
+</html>
